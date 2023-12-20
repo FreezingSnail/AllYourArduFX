@@ -2,12 +2,18 @@
 #include <Arduboy2.h>
 #include <ATMlib.h>
 #include <ArduboyFX.h>
+#define ABG_IMPLEMENTATION
+#define SPRITESU_IMPLEMENTATION
+
+#include "src/common.hpp"
 #include "src/fxdata/fxdata.h"
 #include "song.h"
 #include "src/background.hpp"
+
 #include "src/explosion.hpp"
 
-Arduboy2Base arduboy;
+decltype(a) a;
+
 ATMsynth ATM;
 Explosion explosions[8];
 Background background;
@@ -16,12 +22,10 @@ uint8_t frame, ticker;
 // struct atm_sfx_state sfx_state;
 
 void setup() {
-    arduboy.begin();
-    // set the framerate of the game at 60 fps
-    arduboy.setFrameRate(60);
-    arduboy.initRandomSeed();
+    a.boot();
+    a.startGray();
     // let's make sure the sound was not muted in a previous sketch
-    arduboy.audio.on();
+    a.audio.on();
 
     FX::begin(FX_DATA_PAGE);
     //  FX::setFont(arduboyFont, dcmNormal);   // select default font
@@ -52,7 +56,7 @@ void intro() {
         frame++;
     }
     for (uint8_t i = 0; i < 8; i++) {
-        explosions[i].tick();
+        // explosions[i].tick();
     }
 
     if (ticker == 60) {
@@ -76,19 +80,21 @@ void intro() {
 }
 
 void loop() {
-    if (!arduboy.nextFrame()) {
-        return;
-    }
     ticker++;
+    if (ticker % 10 == 0) {
+        frame++;
+    }
+
+    FX::enableOLED();
+    a.waitForNextPlane();
+    FX::disableOLED();
+
     background.tick();
-
-    FX::drawBitmap(20, 0, titleShip, 0, dbmMasked);
-
     intro();
+    SpritesU::drawOverwriteFX(frame, 30, MAINSHIP_IMG, a.currentPlane());
+    SpritesU::drawPlusMaskFX(20, 0, TITLESHIP2_IMG, a.currentPlane());
 
     if (atm_synth_is_score_stopped()) {
         atm_synth_play_score((const uint8_t *)&score);
     }
-
-    FX::display(CLEAR_BUFFER);
 }

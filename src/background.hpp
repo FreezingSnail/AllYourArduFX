@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduboy2.h>
 #include <stdint.h>
+#include "common.hpp"
 
 class Background {
   public:
@@ -51,14 +52,14 @@ class Background {
         }
 
         for (uint8_t i = 0; i < 5; i++) {
-            Arduboy2::drawPixel(x[i], y[i]);
+            SpritesU::fillRect(x[i], y[i], 1, 1, WHITE);
         }
         for (uint8_t i = 5; i < 10; i++) {
-            Arduboy2::drawFastHLine(x[i], y[i], 2, WHITE);
+            SpritesU::fillRect(x[i], y[i], 2, 1, WHITE);
         }
         for (uint8_t i = 10; i < 15; i++) {
-            Arduboy2::drawFastHLine(x[i], y[i], 2, WHITE);
-            Arduboy2::drawPixel(x[i], y[i] + 1);
+            SpritesU::fillRect(x[i], y[i], 2, 1, WHITE);
+            SpritesU::fillRect(x[i], y[i] + 1, 1, 1, WHITE);
         }
     };
 };

@@ -3,6 +3,7 @@
 #include <Arduboy2.h>
 #include <ArduboyFX.h>
 #include <stdint.h>
+#include "common.hpp"
 
 class Explosion {
   public:
@@ -20,10 +21,10 @@ class Explosion {
         ticker = 0;
         switch (size) {
         case 8:
-            sprite = explosion;
+            sprite = EXPLOSION_IMG;
             break;
         case 16:
-            sprite = midExplosion;
+            sprite = MIDEXPLOSION_IMG;
             break;
         }
     }
@@ -49,6 +50,7 @@ class Explosion {
             }
         }
 
-        FX::drawBitmap(x, y, sprite, frame, dbmMasked);
+        SpritesU::drawOverwriteFX(x, y, sprite, a.currentPlane());
+        // FX::drawBitmap(x, y, sprite, frame, dbmMasked);
     };
 };

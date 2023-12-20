@@ -1,1 +1,1 @@
-include = "fx_images.txt"
+include = "Sprites.txt"
