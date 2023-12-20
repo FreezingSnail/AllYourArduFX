@@ -98,7 +98,7 @@ def parse_filename(filename):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="This script converts images to a specific format.")
+        description="This script converts images to a specific format.\n Place all images of the format <name>_<width>x<height>.png in a directory and run this script with the path to the dir as an argument.")
     parser.add_argument(
         "dirpath", help="the path of the directory to convert files from")
     parser.add_argument("-s", "--shades", type=int, help="an optional number")
