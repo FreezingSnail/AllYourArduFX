@@ -21,6 +21,9 @@ class Explosion {
         ticker = 0;
         switch (size) {
         case 8:
+            sprite = EXPLOSIONSMALL_IMG;
+            break;
+        case 10:
             sprite = EXPLOSION_IMG;
             break;
         case 16:
@@ -34,23 +37,30 @@ class Explosion {
             return;
         }
         ticker++;
-        if (ticker % 5 == 0) {
+        if (ticker % 20 == 0) {
             frame++;
         }
         switch (size) {
         case 8:
-            if (frame == 6) {
+            if (frame == 8) {
                 active = false;
                 return;
             }
-        case 16:
+        case 10: {
             if (frame == 8) {
                 active = false;
                 return;
             }
         }
+        case 16:
+            if (frame == 8) {
+                active = false;
+                frame = 0;
+                return;
+            }
+        }
 
-        SpritesU::drawOverwriteFX(x, y, sprite, a.currentPlane());
+        SpritesU::drawPlusMaskFX(x, y, sprite, frame * 3 + a.currentPlane());
         // FX::drawBitmap(x, y, sprite, frame, dbmMasked);
     };
 };

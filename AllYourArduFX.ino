@@ -17,7 +17,7 @@ decltype(a) a;
 ATMsynth ATM;
 Explosion explosions[8];
 Background background;
-uint8_t frame, ticker;
+uint16_t frame, ticker;
 
 // struct atm_sfx_state sfx_state;
 
@@ -33,7 +33,7 @@ void setup() {
 
     // Begin playback of song.
     atm_synth_setup();
-    atm_synth_play_score((const uint8_t *)&score);
+    atm_synth_play_score((const uint8_t *)&squarez);
 
     background.init();
     ticker = 0;
@@ -50,13 +50,9 @@ void spawnTitleSplode(uint8_t x, uint8_t y) {
 }
 
 void intro() {
-    ticker++;
 
-    if (ticker % 5 == 0) {
-        frame++;
-    }
     for (uint8_t i = 0; i < 8; i++) {
-        // explosions[i].tick();
+        explosions[i].tick();
     }
 
     if (ticker == 60) {
@@ -90,11 +86,11 @@ void loop() {
     FX::disableOLED();
 
     background.tick();
-    intro();
-    SpritesU::drawOverwriteFX(frame, 30, MAINSHIP_IMG, a.currentPlane());
+    // SpritesU::drawOverwriteFX(frame, 30, MAINSHIP_IMG, a.currentPlane());
     SpritesU::drawPlusMaskFX(20, 0, TITLESHIP2_IMG, a.currentPlane());
+    intro();
 
     if (atm_synth_is_score_stopped()) {
-        atm_synth_play_score((const uint8_t *)&score);
+        atm_synth_play_score((const uint8_t *)&squarez);
     }
 }
