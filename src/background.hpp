@@ -5,7 +5,6 @@
 
 class Background {
   public:
-    uint8_t ticker;
     int8_t x[15];
     uint8_t y[15];
 
@@ -17,11 +16,6 @@ class Background {
     };
 
     void tick() {
-        ticker++;
-        if (ticker == 61) {
-            ticker = 0;
-        }
-
         if (ticker % 40 == 0) {
             for (uint8_t i = 0; i < 5; i++) {
                 x[i]--;
@@ -31,7 +25,7 @@ class Background {
                 }
             }
         }
-        if (ticker % 15 == 0) {
+        if (ticker % 30 == 0) {
             for (uint8_t i = 5; i < 10; i++) {
                 x[i] -= 1;
                 if (x[i] < -5) {
@@ -40,10 +34,10 @@ class Background {
                 }
             }
         }
-        if (ticker % 5 == 0) {
+        if (ticker % 4 == 0) {
 
             for (uint8_t i = 10; i < 15; i++) {
-                x[i] -= 2;
+                x[i] -= 1;
                 if (x[i] < -5) {
                     x[i] = rand() % 5 + 124;
                     y[i] = rand() % 60;

@@ -18,7 +18,11 @@ ATMsynth ATM;
 Explosion explosions[8];
 Background background;
 uint16_t frame, ticker;
+State state;
 
+static bool dir;
+uint8_t ox;
+uint8_t oy;
 // struct atm_sfx_state sfx_state;
 
 void setup() {
@@ -38,6 +42,24 @@ void setup() {
     background.init();
     ticker = 0;
     frame = 0;
+
+    state = INTRO;
+}
+
+void update() {
+    uint8_t b = a.buttonsState();
+    if (ox > 0 && (b & LEFT_BUTTON))
+        --ox;
+    if (oy > 0 && (b & UP_BUTTON))
+        --oy;
+    if (ox < 128 && (b & RIGHT_BUTTON))
+        ++ox;
+    if (oy < 64 && (b & DOWN_BUTTON))
+        ++oy;
+
+    if (b & A_BUTTON) {
+        state = GAME;
+    }
 }
 
 void spawnTitleSplode(uint8_t x, uint8_t y) {
@@ -76,21 +98,39 @@ void intro() {
 }
 
 void loop() {
-    ticker++;
-    if (ticker % 10 == 0) {
-        frame++;
-    }
 
     FX::enableOLED();
     a.waitForNextPlane();
     FX::disableOLED();
 
     background.tick();
-    // SpritesU::drawOverwriteFX(frame, 30, MAINSHIP_IMG, a.currentPlane());
-    SpritesU::drawPlusMaskFX(20, 0, TITLESHIP2_IMG, a.currentPlane());
-    intro();
+    if (a.needsUpdate()) {
+        ticker++;
+        if (ticker % 10 == 0) {
+            frame++;
+        }
 
+        update();
+    }
     if (atm_synth_is_score_stopped()) {
         atm_synth_play_score((const uint8_t *)&squarez);
+    }
+
+    switch (state) {
+    case INTRO:
+        intro();
+        SpritesU::drawPlusMaskFX(20, 0, TITLESHIP2_IMG, a.currentPlane());
+
+        break;
+    case TITLE:
+        break;
+    case GAME:
+        SpritesU::drawPlusMaskFX(ox, oy, MAINSHIP_IMG, FRAME(frame % 2));
+
+        break;
+    case LEVEL_SELECT:
+        break;
+    case MENU:
+        break;
     }
 }
