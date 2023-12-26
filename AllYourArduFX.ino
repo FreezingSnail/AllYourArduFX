@@ -11,6 +11,7 @@
 #include "src/background.hpp"
 
 #include "src/explosion.hpp"
+#include "src/playerShip.hpp"
 
 decltype(a) a;
 
@@ -24,6 +25,8 @@ static bool dir;
 uint8_t ox;
 uint8_t oy;
 // struct atm_sfx_state sfx_state;
+
+PlayerShip player;
 
 void setup() {
     a.boot();
@@ -43,22 +46,38 @@ void setup() {
     ticker = 0;
     frame = 0;
 
-    state = INTRO;
+    state = GAME;
 }
 
 void update() {
     uint8_t b = a.buttonsState();
-    if (ox > 0 && (b & LEFT_BUTTON))
+    if (ox > 0 && (b & LEFT_BUTTON)) {
         --ox;
-    if (oy > 0 && (b & UP_BUTTON))
+        player.move(-1, 0);
+        // player.x = ox;
+    }
+    if (oy > 0 && (b & UP_BUTTON)) {
         --oy;
-    if (ox < 128 && (b & RIGHT_BUTTON))
+        player.move(0, -1);
+        // player.y = oy;
+    }
+    if (ox < 128 && (b & RIGHT_BUTTON)) {
         ++ox;
-    if (oy < 64 && (b & DOWN_BUTTON))
+        player.move(1, 0);
+        // player.x = ox;
+    }
+    if (oy < 64 && (b & DOWN_BUTTON)) {
         ++oy;
+        player.move(0, 1);
+        // player.y = oy;
+    }
 
     if (b & A_BUTTON) {
         state = GAME;
+    }
+
+    if (a.justPressed(A_BUTTON)) {
+        player.shoot();
     }
 }
 
@@ -125,7 +144,8 @@ void loop() {
     case TITLE:
         break;
     case GAME:
-        SpritesU::drawPlusMaskFX(ox, oy, MAINSHIP_IMG, FRAME(frame % 2));
+        player.tick();
+        player.draw();
 
         break;
     case LEVEL_SELECT:
